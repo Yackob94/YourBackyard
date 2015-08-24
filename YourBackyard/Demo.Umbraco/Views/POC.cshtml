@@ -15,7 +15,7 @@
 	<script type="text/javascript">
 		var map;
 		var backyard;
-		var originCoord;
+		//var originCoord;
 
 		google.maps.event.addDomListener(window, 'load', initMap);
 
@@ -27,11 +27,15 @@
 				mapTypeId: google.maps.MapTypeId.TERRAIN
 			});
 
-			backyard = new google.maps.Polyline({
+			backyard = new google.maps.Polygon({
 				geodesic: true,
 				strokeColor: '#FF0000',
 				strokeOpacity: 1.0,
-				strokeWeight: 2
+				strokeWeight: 2,
+				fillColor: '#FF0000',
+				fillOpacity: 0.35,
+				draggable: true,
+				editable: true
 			});
 
 			backyard.setMap(map);
@@ -41,22 +45,22 @@
 
 		function addCoord(event) {
 			var borderSoFar = backyard.getPath();
-			//If the border is not a ready to be linked up then keep adding to the array
-			if (borderSoFar.length <= 2) {
+			////If the border is not a ready to be linked up then keep adding to the array
+			//if (borderSoFar.length <= 2) {
 				borderSoFar.push(event.latLng);
-				originCoord = borderSoFar.getAt(0);
-				if (borderSoFar.length > 2) {
-					//We have enough sides to make a triangle
-					borderSoFar.push(originCoord);
-				}
-			}
-			//Keep adding the origin so that the shape is closed
-			if (borderSoFar.length > 3) {
-				originCoord = borderSoFar.getAt(0);
-				borderSoFar.removeAt(borderSoFar.length - 1);
-				borderSoFar.push(event.latLng);
-				borderSoFar.push(originCoord);
-			}
+			//	//originCoord = borderSoFar.getAt(0);
+			//	if (borderSoFar.length > 2) {
+			//		//We have enough sides to make a triangle
+			//		borderSoFar.push(originCoord);
+			//	}
+			//}
+			////Keep adding the origin so that the shape is closed
+			//if (borderSoFar.length > 3) {
+			//	originCoord = borderSoFar.getAt(0);
+			//	borderSoFar.removeAt(borderSoFar.length - 1);
+			//	borderSoFar.push(event.latLng);
+			//	borderSoFar.push(originCoord);
+			//}
 		}
 
 	</script>
