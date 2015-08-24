@@ -1,0 +1,63 @@
+﻿@using ClientDependency.Core.Mvc
+@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+	Layout = null;
+	Html.RequiresJs("http://maps.google.com/maps/api/js?sensor=false");
+}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>YourBackyard</title>
+	@Html.RenderJsHere()
+</head>
+<body>
+	<div id="map" style="height: 500px; width: 500px;"></div>
+	<script type="text/javascript">
+		var map;
+		var backyard;
+		var originCoord;
+
+		google.maps.event.addDomListener(window, 'load', initMap);
+
+		function initMap() {
+			//Initialize the map
+			map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 3,
+				center: { lat: 0, lng: -180 },
+				mapTypeId: google.maps.MapTypeId.TERRAIN
+			});
+
+			backyard = new google.maps.Polyline({
+				geodesic: true,
+				strokeColor: '#FF0000',
+				strokeOpacity: 1.0,
+				strokeWeight: 2
+			});
+
+			backyard.setMap(map);
+			map.addListener("click", addCoord);
+		}
+
+		function addCoord(event) {
+			var borderSoFar = backyard.getPath();
+			//If the border is not a ready to be linked up then keep adding to the array
+			if (borderSoFar.length <= 2) {
+				borderSoFar.push(event.latLng);
+				originCoord = borderSoFar.getAt(0);
+				if (borderSoFar.length > 2) {
+					//We have enough sides to make a triangle
+					borderSoFar.push(originCoord);
+				}
+			}
+			//Keep adding the origin so that the shape is closed
+			if (borderSoFar.length > 3) {
+				originCoord = borderSoFar.getAt(0);
+				borderSoFar.removeAt(borderSoFar.length - 1);
+				borderSoFar.push(event.latLng);
+				borderSoFar.push(originCoord);
+			}
+		}
+
+	</script>
+</body>
+</html>
