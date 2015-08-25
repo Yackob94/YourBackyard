@@ -11,11 +11,14 @@
 	@Html.RenderJsHere()
 </head>
 <body>
-	<div id="map" style="height: 500px; width: 500px;"></div>
+<div id="map" style="height: 500px; width: 500px;"></div>
+<a id="addYard" onclick="addBackyard()" href="javascript:void(0)">Add a yard!</a>
 	<script type="text/javascript">
 		var map;
-		var backyard;
+		//var backyard;
+		var backyards=[];
 		//var originCoord;
+		var selectedBackyard;
 
 		google.maps.event.addDomListener(window, 'load', initMap);
 
@@ -26,8 +29,15 @@
 				center: { lat: 0, lng: -180 },
 				mapTypeId: google.maps.MapTypeId.TERRAIN
 			});
+			
+			addBackyard();
+			
+			map.addListener("click", addCoord);
+			//drag here event
+		}
 
-			backyard = new google.maps.Polygon({
+		function addBackyard() {
+			var backyard = new google.maps.Polygon({
 				geodesic: true,
 				strokeColor: '#FF0000',
 				strokeOpacity: 1.0,
@@ -38,13 +48,19 @@
 				editable: true
 			});
 
+			if (backyards.length) {
+				backyards = [backyard];
+			} else {
+				backyards.push(backyard);
+			}
+			
+			backyard.addListener("click", selectBackyard);
+			selectBackyard(backyard);
 			backyard.setMap(map);
-			map.addListener("click", addCoord);
-			//drag here event
 		}
 
 		function addCoord(event) {
-			var borderSoFar = backyard.getPath();
+			var borderSoFar = selectedBackyard.getPath();
 			////If the border is not a ready to be linked up then keep adding to the array
 			//if (borderSoFar.length <= 2) {
 				borderSoFar.push(event.latLng);
@@ -63,6 +79,9 @@
 			//}
 		}
 
+		function selectBackyard(backyard) {
+			selectedBackyard = backyard.valueOf();
+		}
 	</script>
 </body>
 </html>
