@@ -199,4 +199,4 @@ FakesAssemblies/
 [Ll]ogs/
 NuGetBackup/
 TEMP/
-#*.sdf
+*.sdf
