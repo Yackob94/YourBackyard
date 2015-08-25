@@ -1,0 +1,21 @@
+{
+  "name": "YourBackyard",
+  "version": "0.0.1",
+  "homepage": "https://github.com/Yackob94/YourBackyard",
+  "authors": [
+    "Jacob Polden"
+  ],
+  "description": "GeoFencing Datatype for Umbraco",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.4"
+  }
+}
