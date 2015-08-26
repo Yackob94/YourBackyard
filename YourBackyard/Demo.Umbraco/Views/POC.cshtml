@@ -44,7 +44,8 @@
 				map = new google.maps.Map(document.getElementById('map'), {
 					zoom: 3,
 					center: { lat: 0, lng: -180 },
-					mapTypeId: google.maps.MapTypeId.TERRAIN
+					mapTypeId: google.maps.MapTypeId.ROADMAP,
+					disableDefaultUI: true
 				});
 
 				map.addListener("click", addCoord);
@@ -52,7 +53,7 @@
 
 			////////////////// Scope Methods //////////////////
 			$scope.addBackyard = function (name) {
-				var colour = "#ff0000";
+				var colour = getRandomColour();
 				if (name != "") {
 					$scope.error = false;
 					var backyardToAdd = new backyard(name, generatePolygon(colour), colour);
@@ -86,6 +87,10 @@
 					draggable: true,
 					editable: true
 				});
+			}
+
+			function getRandomColour() {
+				return "#" + Math.random().toString(16).slice(2, 8);
 			}
 
 			////////////////// Events //////////////////
