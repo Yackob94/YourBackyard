@@ -18,7 +18,7 @@
 		<input name="enterName" ng-model="addYardText" type="text" />
 		<p ng-show="error">You need to enter a name!</p>
 		<ul >
-			<li ng-repeat="backyard in backyards "><a ng-click="selectBackyard(backyard)" href="javascript:void(0)">{{backyard.name}}</a></li>
+			<li ng-repeat="backyard in backyards "><a ng-click="selectBackyard(backyard)" href="javascript:void(0)">{{backyard.name}}</a> <a ng-click="deleteBackyard(backyard)" style="color: red;" href="javascript:void(0)">Delete</a></li>
 		</ul>
 	</div>
 	<script type="text/javascript">
@@ -36,8 +36,18 @@
 				this.name = name;
 				this.polygon = polygon;
 				this.colour = colour;
+				this.disbaled = false;
 			}
 
+			////////////////// Extensions //////////////////
+			Array.prototype.remove = function (item) {
+				var index = this.indexOf(item);
+				this.splice(index, 1);
+			}
+
+			Array.prototype.first = function() {
+				return this[0];
+			}
 			////////////////// Initilization //////////////////
 			function initMap() {
 				//Initialize the map
@@ -66,13 +76,30 @@
 
 					$scope.selectBackyard(backyardToAdd);
 					backyardToAdd.polygon.setMap(map);
+					$scope.addYardText = "";
 				} else {
 					$scope.error = true;
 				}
 			}
 
-			$scope.selectBackyard = function (backyard) {
+			$scope.deleteBackyard = function (backyard) {
+				if ($scope.backyards.length) {
+					$scope.selectBackyard($scope.backyards.first());
+				}
+				backyard.polygon.setMap(null);
+				$scope.backyards.remove(backyard);
+			}
+
+			$scope.disableBackyard = function (backyard) {
 				$scope.selectedBackyard = backyard;
+			}
+
+			$scope.selectBackyard = function (backyard) {
+				if ($scope.selectedBackyard != undefined) {
+					setColourOnMap($scope.selectedBackyard, $scope.selectedBackyard.colour);
+				}
+				$scope.selectedBackyard = backyard;
+				setColourOnMap($scope.selectedBackyard, "#0000FF");
 			}
 			
 			////////////////// Utils //////////////////
@@ -91,6 +118,12 @@
 
 			function getRandomColour() {
 				return "#" + Math.random().toString(16).slice(2, 8);
+			}
+
+			function setColourOnMap(backyard, colour) {
+				backyard.polygon.strokeColor = colour;
+				backyard.polygon.setMap(null);
+				backyard.polygon.setMap(map);
 			}
 
 			////////////////// Events //////////////////
